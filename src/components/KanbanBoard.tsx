@@ -10,7 +10,11 @@ import type { Task, Status, Priority } from "@/types/kanban";
 
 const COLUMNS: Status[] = ["todo", "in_progress", "completed"];
 
-export function KanbanBoard() {
+interface KanbanBoardProps {
+  onTasksChanged?: () => void;
+}
+
+export function KanbanBoard({ onTasksChanged }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogStatus, setDialogStatus] = useState<Status>("todo");
@@ -44,7 +48,6 @@ export function KanbanBoard() {
         t.id === draggableId ? { ...t, status: newStatus } : t
       );
 
-      // Reorder within column
       const columnTasks = updated
         .filter((t) => t.status === newStatus)
         .sort((a, b) => a.position - b.position);
@@ -134,27 +137,21 @@ export function KanbanBoard() {
     tasks.filter((t) => t.status === status).sort((a, b) => a.position - b.position);
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen">
-      {/* Top bar */}
-      <header className="flex items-center justify-between px-8 py-5 border-b border-border bg-card">
-        <div>
-          <h1 className="text-2xl font-display font-bold text-foreground">Workspace</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Manage your tasks and projects</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={handleSave} disabled={saving}>
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? "Saving..." : "Save Board"}
-          </Button>
-          <Button onClick={() => openDialog("todo")}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Task
-          </Button>
-        </div>
-      </header>
+    <div className="flex-1 flex flex-col min-h-0">
+      {/* Action bar */}
+      <div className="flex items-center justify-end px-8 py-4 gap-3">
+        <Button variant="outline" onClick={handleSave} disabled={saving}>
+          <Save className="w-4 h-4 mr-2" />
+          {saving ? "Saving..." : "Save Board"}
+        </Button>
+        <Button onClick={() => openDialog("todo")}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Task
+        </Button>
+      </div>
 
       {/* Board */}
-      <div className="flex-1 overflow-x-auto p-8">
+      <div className="flex-1 overflow-x-auto px-8 pb-8">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex gap-6 min-w-max">
             {COLUMNS.map((status) => (

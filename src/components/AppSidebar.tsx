@@ -1,11 +1,6 @@
-import { LayoutDashboard, MessageCircle, Settings } from "lucide-react";
+import { LayoutDashboard, Settings } from "lucide-react";
 
-interface AppSidebarProps {
-  onToggleChat: () => void;
-  chatOpen: boolean;
-}
-
-export function AppSidebar({ onToggleChat, chatOpen }: AppSidebarProps) {
+export function AppSidebar() {
   return (
     <aside className="w-16 min-h-screen bg-sidebar flex flex-col items-center py-6 gap-2 border-r border-sidebar-border">
       <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center mb-8">
@@ -13,12 +8,6 @@ export function AppSidebar({ onToggleChat, chatOpen }: AppSidebarProps) {
       </div>
 
       <NavItem icon={LayoutDashboard} label="Board" active />
-      <NavItem
-        icon={MessageCircle}
-        label="AI Chat"
-        active={chatOpen}
-        onClick={onToggleChat}
-      />
       <div className="flex-1" />
       <NavItem icon={Settings} label="Settings" />
     </aside>
